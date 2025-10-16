@@ -19,8 +19,9 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-target_include_directories(include)
 add_library(lab_lib src/gcd.cpp)
+
+target_include_directories(lab_lib PUBLIC ${CMAKE_SOURCE_DIR}/include)
 
 add_executable(main main.cpp)
 target_link_libraries(main lab_lib)

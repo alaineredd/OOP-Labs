@@ -19,7 +19,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-target_include_directories(include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 add_library(seven_lib src/seven.cpp)
 add_library(vector_lib src/vector.cpp)
 

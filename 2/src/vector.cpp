@@ -2,6 +2,11 @@
 
 #include <memory>
 #include <algorithm>
+#include <cstdlib>
+#include <cstddef>
+#include <utility>
+#include <new>
+#include <string>
 
 namespace vector {
     vector::vector() : sz_(0), cap_(DEFAULT_CAPACITY), data_(new unsigned char[cap_]) {}

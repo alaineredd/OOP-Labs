@@ -1,12 +1,5 @@
 #pragma once
 
-#include <cstdlib>
-#include <cstddef>
-#include <utility>
-#include <new>
-#include <string>
-#include <algorithm>
-
 namespace vector {
 class vector{
 public:

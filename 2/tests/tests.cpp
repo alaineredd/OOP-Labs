@@ -1,9 +1,10 @@
-#include <gtest/gtest.h>
-#include "seven.h"
-#include "vector.h"
 #include <string>
 #include <stdexcept>
 
+#include <gtest/gtest.h>
+
+#include "seven.h"
+#include "vector.h"
 // ==================== TESTS FOR VECTOR CLASS ====================
 
 TEST(VectorTest, DefaultConstructor) {

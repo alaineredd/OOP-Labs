@@ -7,33 +7,32 @@
 #include "vector.h"
 
 namespace Seven {
-    class Seven {
-        private:
-            vector::vector data_;
-        public:
+class Seven {
+private:
+    vector::vector data_;
+public:
+    Seven();
 
-            Seven();
+    Seven(size_t size, unsigned char number);
 
-            Seven(size_t size, unsigned char number);
+    Seven(const std::string& s);
 
-            Seven(const std::string& s);
+    Seven(const std::initializer_list<unsigned char>& list);
 
-            Seven(const std::initializer_list<unsigned char>& list);
+    Seven(const Seven& other);
 
-            Seven(const Seven& other);
+    Seven(Seven&& other);
 
-            Seven(Seven&& other);
+    ~Seven();
 
-            ~Seven();
+    bool EQ(const Seven& other) const;
 
-            bool EQ(const Seven& other) const;
+    bool GT(const Seven& other) const;
 
-            bool GT(const Seven& other) const;
+    bool LT(const Seven& other) const;
 
-            bool LT(const Seven& other) const;
+    static Seven ADD(const Seven& first, const Seven& second);
 
-            static Seven ADD(const Seven& first, const Seven& second);
-
-            static Seven SUB(const Seven& first, const Seven& second);
-    };
-}
+    static Seven SUB(const Seven& first, const Seven& second);
+};
+} // namespace seven

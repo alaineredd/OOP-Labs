@@ -1,18 +1,18 @@
 #include "vector.h"
 
 #include <memory>
+#include <algorithm>
 
 namespace vector {
-    vector::vector() : sz_(0), cap_(DEFAULTCAPACITY), data_(new unsigned char[cap_]) {}
+    vector::vector() : sz_(0), cap_(DEFAULT_CAPACITY), data_(new unsigned char[cap_]) {}
 
-    vector::vector(size_t size, unsigned char value) : sz_(size), cap_(size) {
-        data_ = new unsigned char[sz_];
+    vector::vector(size_t size, unsigned char value) : sz_(size), cap_(size), data_(new unsigned char[sz_]) {
         for(size_t i = 0; i < sz_; ++i) {
             data_[i] = value;
         }
     }
 
-    vector::vector(size_t size) : sz_(size), cap_(std::max(size, DEFAULTCAPACITY)), data_(new unsigned char[size]) {}
+    vector::vector(size_t size) : sz_(size), cap_(std::max(size, DEFAULT_CAPACITY)), data_(new unsigned char[size]) {}
 
     vector::vector(const std::string& s) : sz_(s.size()), cap_(s.size()), data_(new unsigned char[s.size()]) {
         for(size_t i = 0; i < sz_; ++i) {
@@ -59,7 +59,7 @@ namespace vector {
 
     void vector::Push_back(unsigned char value) {
         if(cap_ < sz_ + 1) {
-            Reserve(std::max(2 * cap_, static_cast<std::size_t>(10)));
+            Reserve(2 * cap_);
         }
         data_[sz_] = value;
         sz_++;
@@ -89,4 +89,9 @@ namespace vector {
         delete[] data_;
     }
 
+    void vector::Swap(vector& other) {
+        std::swap(other.data_, data_);
+        std::swap(other.sz_, sz_);
+        std::swap(other.cap_, cap_);
+    }
 }

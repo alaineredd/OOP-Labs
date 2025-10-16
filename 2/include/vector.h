@@ -1,5 +1,11 @@
 #pragma once
 
+#include <cstdlib>
+#include <cstddef>
+#include <utility>
+#include <new>
+#include <string>
+
 namespace vector {
 class vector{
 public:

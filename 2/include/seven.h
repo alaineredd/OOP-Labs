@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <initializer_list>
 #include <stdexcept>
 
 #include "vector.h"

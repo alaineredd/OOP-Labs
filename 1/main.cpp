@@ -1,5 +1,6 @@
-#include "gcd.h"
 #include <iostream>
+
+#include "gcd.h"
 
 int main() {
     int64_t first;

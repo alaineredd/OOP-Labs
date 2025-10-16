@@ -19,7 +19,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-include_directories(include)
+target_include_directories(include)
 add_library(lab_lib src/gcd.cpp)
 
 add_executable(main main.cpp)

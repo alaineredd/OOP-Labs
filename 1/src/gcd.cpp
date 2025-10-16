@@ -1,7 +1,6 @@
 #include "gcd.h"
 
 namespace gcd {
-
 int64_t gcd(int64_t first, int64_t second) {
     if (first < 0) {
         first *= -1;
@@ -34,5 +33,4 @@ int64_t gcd(int64_t first, int64_t second) {
     }
     return 1;
 }
-
-}
+} // namespace gcd

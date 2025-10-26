@@ -108,6 +108,7 @@ std::istream &operator>>(std::istream &in, Rhombus& rhombus) {
 
 std::ostream &operator<<(std::ostream &out, const Rhombus& rhombus) {
     rhombus.Print(out);
+    return out;
 }
 
 } // namespace figure

@@ -13,7 +13,7 @@ Trapezoid::~Trapezoid() = default;
 
 Trapezoid& Trapezoid::operator=(const Trapezoid& other) {
     if (this != &other) {
-        for (int i = 0; i < TETRA_VERTICES; ++i) {
+        for (int i = 0; i < TETRA_VERTICE; ++i) {
             vertices[i] = other.vertices[i];
         }
     }
@@ -22,7 +22,7 @@ Trapezoid& Trapezoid::operator=(const Trapezoid& other) {
 
 Trapezoid& Trapezoid::operator=(Trapezoid&& other) {
     if (this != &other) {
-        for (int i = 0; i < TETRA_VERTICES; ++i) {
+        for (int i = 0; i < TETRA_VERTICE; ++i) {
             vertices[i] = std::move(other.vertices[i]);
             other.vertices[i] = {0.0, 0.0};
         }
@@ -32,12 +32,12 @@ Trapezoid& Trapezoid::operator=(Trapezoid&& other) {
 
 Point Trapezoid::Center() const {
     Point center = {0.0, 0.0};
-    for (int i = 0; i < TETRA_VERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICE; ++i) {
         center.x += vertices[i].x;
         center.y += vertices[i].y;
     }
-    center.x /= TETRA_VERTICES;
-    center.y /= TETRA_VERTICES;
+    center.x /= TETRA_VERTICE;
+    center.y /= TETRA_VERTICE;
     return center;
 }
 
@@ -54,24 +54,24 @@ Trapezoid::operator double() {
 
 void Trapezoid::Print(std::ostream& out) const {
     out << "trapezoid\n";
-    for (int i = 0; i < TETRA_VERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICE; ++i) {
         out << vertices[i];
-        if (i < TETRA_VERTICES - 1) {
+        if (i < TETRA_VERTICE - 1) {
             out << ", ";
         }
     }
 }
 
 Point Trapezoid::GetVertex(int index) const {
-    if (index < 0 || index >= TETRA_VERTICES) {
+    if (index < 0 || index >= TETRA_VERTICE) {
         throw std::out_of_range("vertex index out of range");
     }
     return vertices[index];
 }
 
 bool Trapezoid::IsValid() const {
-    for (int i = 0; i < TETRA_VERTICES; ++i) {
-        for (int j = i + 1; j < TETRA_VERTICES; ++j) {
+    for (int i = 0; i < TETRA_VERTICE; ++i) {
+        for (int j = i + 1; j < TETRA_VERTICE; ++j) {
             if (vertices[i] == vertices[j]) {
                 return false;
             }
@@ -85,7 +85,7 @@ bool Trapezoid::IsValid() const {
 }
 
 bool operator==(const Trapezoid& first, const Trapezoid& second) {
-    for (int i = 0; i < TETRA_VERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICE; ++i) {
         if (std::abs(first.vertices[i].x - second.vertices[i].x) > EPSILON ||
             std::abs(first.vertices[i].y - second.vertices[i].y) > EPSILON) {
             return false;
@@ -99,7 +99,7 @@ bool operator!=(const Trapezoid& first, const Trapezoid& second) {
 }
 
 std::istream &operator>>(std::istream &in, Trapezoid& trapezoid) {
-    for (int i = 0; i < TETRA_VERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICE; ++i) {
         in >> trapezoid.vertices[i];
     }
     return in;
@@ -107,6 +107,7 @@ std::istream &operator>>(std::istream &in, Trapezoid& trapezoid) {
 
 std::ostream &operator<<(std::ostream &out, const Trapezoid& trapezoid) {
     trapezoid.Print(out);
+    return out;
 }
 
 } // namespace figure

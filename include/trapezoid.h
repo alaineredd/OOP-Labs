@@ -4,7 +4,7 @@
 
 namespace figure{
 
-constexpr const int TETRA_VERTICES = 4;
+constexpr const int TETRA_VERTICE = 4;
 
 class Trapezoid : public Figure {
     friend bool operator==(const Trapezoid& first, const Trapezoid& second);
@@ -12,7 +12,7 @@ class Trapezoid : public Figure {
     friend std::istream &operator>>(std::istream &in, Trapezoid& trapezoid);
     friend std::ostream &operator<<(std::ostream &out, const Trapezoid& trapezoid);
 private:
-    Point vertices[TETRA_VERTICES];
+    Point vertices[TETRA_VERTICE];
 public:
     Trapezoid();
 

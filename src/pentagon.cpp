@@ -111,6 +111,7 @@ std::istream &operator>>(std::istream &in, Pentagon& pentagon) {
 
 std::ostream &operator<<(std::ostream &out, const Pentagon& pentagon) {
     pentagon.Print(out);
+    return out;
 }
 
 } // namespace figure

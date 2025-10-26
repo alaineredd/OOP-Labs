@@ -4,17 +4,20 @@
 
 namespace figure{
 
-constexpr const int TETRAVERTICES = 4;
-constexpr const int PENTAVERTICES = 5;
 constexpr const double EPSILON = 1e-9;
 
 struct Point{
     double x;
     double y;
-
+    
     Point();
     Point(double cx, double cy);
 };
+
+bool operator==(const Point& p1, const Point& p2);
+bool operator!=(const Point& p1, const Point& p2);
+std::ostream& operator<<(std::ostream& os, const Point& p);
+std::istream& operator>>(std::istream& is, Point& p);
 
 class Figure{
     friend std::ostream &operator<<(std::ostream &out, const Figure &figure);

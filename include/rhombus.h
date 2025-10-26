@@ -4,21 +4,23 @@
 
 namespace figure{
 
+constexpr const int TETRA_VERTICES = 4;
+
 class Rhombus : public Figure {
     friend bool operator==(const Rhombus& first, const Rhombus& second);
     friend bool operator!=(const Rhombus& first, const Rhombus& second);
     friend std::istream &operator>>(std::istream &in, Rhombus& Rhombus);
     friend std::ostream &operator<<(std::ostream &out, const Rhombus& Rhombus);
 private:
-    Point vertices[TETRAVERTICES];
+    Point vertices[TETRA_VERTICES];
 public:
     Rhombus();
 
     Rhombus(const Point& p1, const Point& p2, const Point& p3, const Point& p4);
 
-    Rhombus(const Rhombus& other);
+    Rhombus(const Rhombus& other) = default;
 
-    Rhombus(Rhombus&& other);
+    Rhombus(Rhombus&& other) = default;
 
     ~Rhombus();
 

@@ -1,42 +1,19 @@
 #include <cmath>
 #include <algorithm>
 
-#include "../include/rhombus.h"
+#include "rhombus.h"
 
 namespace figure {
 
-Rhombus::Rhombus() {
-    vertices[0] = Point(0.0, 0.0);
-    vertices[1] = Point(1.0, 0.0);
-    vertices[2] = Point(1.0, 1.0);
-    vertices[3] = Point(0.0, 1.0);
-}
+Rhombus::Rhombus() : vertices{{0.0, 0.0}, {1.0, 0.0}, {1.0, 1.0}, {0.0, 1.0}} {}
 
-Rhombus::Rhombus(const Point& p1, const Point& p2, const Point& p3, const Point& p4) {
-    vertices[0] = p1;
-    vertices[1] = p2;
-    vertices[2] = p3;
-    vertices[3] = p4;
-}
-
-Rhombus::Rhombus(const Rhombus& other) {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        vertices[i] = other.vertices[i];
-    }
-}
-
-Rhombus::Rhombus(Rhombus&& other) {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        vertices[i] = std::move(other.vertices[i]);
-        other.vertices[i] = {0.0, 0.0};
-    }
-}
+Rhombus::Rhombus(const Point& p1, const Point& p2, const Point& p3, const Point& p4) : vertices{p1, p2, p3, p4} {}
 
 Rhombus::~Rhombus() = default;
 
 Rhombus& Rhombus::operator=(const Rhombus& other) {
     if (this != &other) {
-        for (int i = 0; i < TETRAVERTICES; ++i) {
+        for (int i = 0; i < TETRA_VERTICES; ++i) {
             vertices[i] = other.vertices[i];
         }
     }
@@ -45,7 +22,7 @@ Rhombus& Rhombus::operator=(const Rhombus& other) {
 
 Rhombus& Rhombus::operator=(Rhombus&& other) {
     if (this != &other) {
-        for (int i = 0; i < TETRAVERTICES; ++i) {
+        for (int i = 0; i < TETRA_VERTICES; ++i) {
             vertices[i] = std::move(other.vertices[i]);
             other.vertices[i] = {0.0, 0.0};
         }
@@ -59,12 +36,12 @@ Rhombus::operator double() {
 
 Point Rhombus::Center() const {
     Point center = {0.0, 0.0};
-    for (int i = 0; i < TETRAVERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICES; ++i) {
         center.x += vertices[i].x;
         center.y += vertices[i].y;
     }
-    center.x /= TETRAVERTICES;
-    center.y /= TETRAVERTICES;
+    center.x /= TETRA_VERTICES;
+    center.y /= TETRA_VERTICES;
     return center;
 }
 
@@ -75,23 +52,26 @@ double Rhombus::Area() const {
 }
 
 Point Rhombus::GetVertex(int index) const {
-    if (index < 0 || index >= TETRAVERTICES) {
+    if (index < 0 || index >= TETRA_VERTICES) {
         throw std::out_of_range("Vertex index out of range");
     }
     return vertices[index];
 }
 
 void Rhombus::Print(std::ostream& out) const {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        out << "(" << vertices[i].x << ", " << vertices[i].y << ")";
-        if (i < TETRAVERTICES - 1) out << ", ";
+    out << "rhombus\n";
+    for (int i = 0; i < TETRA_VERTICES; ++i) {
+        out << vertices[i];
+        if (i < TETRA_VERTICES - 1) {
+            out << ", ";
+        }
     }
 }
 
 bool Rhombus::IsValid() const {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        for (int j = i + 1; j < TETRAVERTICES; ++j) {
-            if (vertices[i].x == vertices[j].x && vertices[i].y == vertices[j].y) {
+    for (int i = 0; i < TETRA_VERTICES; ++i) {
+        for (int j = i + 1; j < TETRA_VERTICES; ++j) {
+            if (vertices[i] == vertices[j]) {
                 return false;
             }
         }
@@ -106,7 +86,7 @@ bool Rhombus::IsValid() const {
 }
 
 bool operator==(const Rhombus& first, const Rhombus& second) {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
+    for (int i = 0; i < TETRA_VERTICES; ++i) {
         if (std::abs(first.vertices[i].x - second.vertices[i].x) > EPSILON ||
             std::abs(first.vertices[i].y - second.vertices[i].y) > EPSILON) {
             return false;
@@ -120,19 +100,14 @@ bool operator!=(const Rhombus& first, const Rhombus& second) {
 }
 
 std::istream &operator>>(std::istream &in, Rhombus& rhombus) {
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        in >> rhombus.vertices[i].x >> rhombus.vertices[i].y;
+    for (int i = 0; i < TETRA_VERTICES; ++i) {
+        in >> rhombus.vertices[i];
     }
     return in;
 }
 
 std::ostream &operator<<(std::ostream &out, const Rhombus& rhombus) {
-    out << "Rhombus vertices: ";
-    for (int i = 0; i < TETRAVERTICES; ++i) {
-        out << "(" << rhombus.vertices[i].x << ", " << rhombus.vertices[i].y << ")";
-        if (i < TETRAVERTICES - 1) out << " ";
-    }
-    return out;
+    rhombus.Print(out);
 }
 
 } // namespace figure

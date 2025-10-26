@@ -3,6 +3,8 @@
 #include "figure.h"
 
 namespace figure{
+    
+constexpr const int PENTA_VERTICES = 5;
 
 class Pentagon : public Figure {
     friend bool operator==(const Pentagon& first, const Pentagon& second);
@@ -10,15 +12,15 @@ class Pentagon : public Figure {
     friend std::istream &operator>>(std::istream &in, Pentagon& Pentagon);
     friend std::ostream &operator<<(std::ostream &out, const Pentagon& Pentagon);
 private:
-    Point vertices[PENTAVERTICES];
+    Point vertices[PENTA_VERTICES];
 public:
     Pentagon();
 
     Pentagon(const Point& p1, const Point& p2, const Point& p3, const Point& p4, const Point& p5);
 
-    Pentagon(const Pentagon& other);
+    Pentagon(const Pentagon& other) = default;
 
-    Pentagon(Pentagon&& other);
+    Pentagon(Pentagon&& other) = default;
 
     ~Pentagon();
 

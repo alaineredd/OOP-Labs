@@ -1,6 +1,6 @@
 #include <stdexcept>
 
-#include "../include/vector.h"
+#include "vector.h"
 
 namespace vector {
 

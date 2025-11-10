@@ -7,12 +7,12 @@
 namespace vector {
 
 template <typename T> 
-Vector<T>::Vector() : sz_(0), cap_(0) {}
+Vector<T>::Vector() : arr_(nullptr), sz_(0), cap_(0) {}
 
 template <typename T>
 Vector<T>::Vector(std::initializer_list<T> init)
     : sz_(init.size()), cap_(init.size()) {
-  arr_ = std::shared_ptr<T[]>(new T[init.size()]);
+  arr_ = new T[init.size()];
   size_t i = 0;
   for (const T &fig : init) {
     arr_[i] = fig;
@@ -73,9 +73,12 @@ void Vector<T>::Reserve(size_t new_cap) {
   if (new_cap <= cap_) {
     return;
   }
-  auto new_arr = std::shared_ptr<T[]>(new T[new_cap]);
-  for (size_t i = 0; i < sz_; i++) {
-    new_arr[i] = std::move(arr_[i]);
+  auto new_arr = new T[new_cap];
+  if (arr_ != nullptr) {
+    for (size_t i = 0; i < sz_; i++) {
+      new_arr[i] = std::move(arr_[i]);
+    }
+    delete[] arr_;
   }
   arr_ = std::move(new_arr);
   cap_ = new_cap;
@@ -160,5 +163,7 @@ void Vector<T>::PrintAllAreas() const {
   }
 }
 
-template <typename T> Vector<T>::~Vector() = default;
+template <typename T> Vector<T>::~Vector() {
+  delete[] arr_;
+};
 } // namespace vector

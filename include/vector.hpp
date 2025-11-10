@@ -68,7 +68,7 @@ public:
   ~Vector();
 
 private:
-  std::shared_ptr<T[]> arr_;
+  T* arr_;
   size_t sz_;
   size_t cap_;
 };

@@ -1,6 +1,7 @@
-#include "npc_visitor.hpp"
-#include "npc.hpp"
 #include <iostream>
+
+#include "visitor.h"
+#include "npc.h"
 
 BattleVisitor::BattleVisitor(int range) : battleRange(range) {}
 

@@ -1,8 +1,9 @@
-#include "dungeon.hpp"
-#include "battle_observer.hpp"
 #include <iostream>
 #include <memory>
 #include <limits>
+
+#include "dungeon.h"
+#include "observer.h"
 
 void displayMenu() {
     std::cout << "\n=== Dungeon Editor for Balagur Fate 3 ===\n";
@@ -20,7 +21,6 @@ void displayMenu() {
 int main() {
     Dungeon dungeon;
     
-    // Создаем наблюдателей
     auto consoleObserver = std::make_shared<ConsoleObserver>();
     auto fileObserver = std::make_shared<FileObserver>("log.txt");
     

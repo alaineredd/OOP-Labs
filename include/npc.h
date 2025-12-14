@@ -3,7 +3,6 @@
 #include <string>
 #include <memory>
 
-// Базовый класс для всех NPC
 class NPC {
 protected:
     std::string name;

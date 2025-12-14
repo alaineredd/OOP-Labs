@@ -1,6 +1,7 @@
-#include "npc_factory.hpp"
 #include <sstream>
 #include <iostream>
+
+#include "npc_factory.h"
 
 std::shared_ptr<NPC> NPCFactory::createNPC(const std::string& type, 
                                            const std::string& name, 

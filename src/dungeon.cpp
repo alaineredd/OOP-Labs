@@ -1,9 +1,11 @@
-#include "dungeon.hpp"
-#include "npc_factory.hpp"
-#include "npc_visitor.hpp"
 #include <fstream>
 #include <iostream>
 #include <memory>
+#include <algorithm>
+
+#include "dungeon.h"
+#include "npc_factory.h"
+#include "visitor.h"
 
 Dungeon::Dungeon() : battleSubject(std::make_shared<BattleSubject>()) {}
 
@@ -90,7 +92,6 @@ void Dungeon::startBattle(int range) {
             auto& npc2 = npcs[j];
             
             if (visitor.shouldFight(*npc1, *npc2)) {
-                // Проверяем результат битвы
                 bool npc1WasAlive = npc1->isAlive();
                 bool npc2WasAlive = npc2->isAlive();
                 

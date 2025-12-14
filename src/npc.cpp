@@ -1,8 +1,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "npc.hpp"
-#include "visitor.hpp"
+#include "npc.h"
+#include "visitor.h"
 
 NPC::NPC(const std::string& name, int x, int y) 
     : name(name), x(x), y(y), alive(true) {}

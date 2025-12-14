@@ -1,7 +1,9 @@
-#include "battle_observer.hpp"
 #include <iostream>
 #include <fstream>
 #include <ctime>
+#include <algorithm>  // Необходимо для std::remove
+
+#include "observer.h"
 
 void ConsoleObserver::onBattleResult(const std::string& result) {
     std::cout << "[BATTLE] " << result << std::endl;

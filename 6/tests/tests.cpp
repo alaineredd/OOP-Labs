@@ -120,9 +120,11 @@ TEST(BattleVisitorTest, AcceptMethodCalls) {
     
     TestVisitor visitor;
     
-    knight.accept(visitor);
-    squirrel.accept(visitor);
-    pegasus.accept(visitor);
+    // Теперь accept принимает второй параметр - другого NPC
+    Knight otherKnight("Other", 0, 0);
+    knight.accept(visitor, otherKnight);
+    squirrel.accept(visitor, otherKnight);
+    pegasus.accept(visitor, otherKnight);
     
     EXPECT_EQ(visitor.knightVisits, 1);
     EXPECT_EQ(visitor.squirrelVisits, 1);
@@ -145,6 +147,10 @@ TEST(BattleVisitorTest, BattleLogic) {
     // Белка должна убить пегаса (но пегас вне радиуса)
     visitor.visit(*squirrel, *pegasus);
     EXPECT_TRUE(pegasus->isAlive()); // Пегас должен остаться жив (вне радиуса)
+    
+    // Пегас никого не трогает
+    visitor.visit(*pegasus, *knight);
+    EXPECT_TRUE(knight->isAlive()); // Рыцарь остается жив
 }
 
 TEST(BattleVisitorTest, ShouldFightLogic) {
@@ -168,6 +174,54 @@ TEST(BattleVisitorTest, RangeChecking) {
     
     EXPECT_TRUE(knight1->isInRange(*knight2, 10)); // Точно в радиусе
     EXPECT_FALSE(knight1->isInRange(*knight2, 9)); // За пределами
+}
+
+TEST(BattleVisitorTest, KnightVsSquirrelBattle) {
+    auto knight = make_shared<Knight>("Arthur", 0, 0);
+    auto squirrel = make_shared<Squirrel>("Nutty", 5, 0); // В радиусе
+    
+    BattleVisitor visitor(10);
+    
+    // Проверяем, что рыцарь убивает белку
+    EXPECT_TRUE(knight->isAlive());
+    EXPECT_TRUE(squirrel->isAlive());
+    
+    visitor.visit(*knight, *squirrel);
+    
+    EXPECT_TRUE(knight->isAlive());
+    EXPECT_FALSE(squirrel->isAlive());
+}
+
+TEST(BattleVisitorTest, SquirrelVsPegasusBattle) {
+    auto squirrel = make_shared<Squirrel>("Nutty", 0, 0);
+    auto pegasus = make_shared<Pegasus>("Sky", 5, 0); // В радиусе
+    
+    BattleVisitor visitor(10);
+    
+    // Проверяем, что белка убивает пегаса
+    EXPECT_TRUE(squirrel->isAlive());
+    EXPECT_TRUE(pegasus->isAlive());
+    
+    visitor.visit(*squirrel, *pegasus);
+    
+    EXPECT_TRUE(squirrel->isAlive());
+    EXPECT_FALSE(pegasus->isAlive());
+}
+
+TEST(BattleVisitorTest, OutOfRangeNoBattle) {
+    auto knight = make_shared<Knight>("Arthur", 0, 0);
+    auto squirrel = make_shared<Squirrel>("Nutty", 100, 100); // Вне радиуса
+    
+    BattleVisitor visitor(10);
+    
+    // NPC вне радиуса не должны сражаться
+    EXPECT_TRUE(knight->isAlive());
+    EXPECT_TRUE(squirrel->isAlive());
+    
+    visitor.visit(*knight, *squirrel);
+    
+    EXPECT_TRUE(knight->isAlive());
+    EXPECT_TRUE(squirrel->isAlive()); // Оба остаются живы
 }
 
 // ====================== Тесты для BattleObserver ======================
@@ -211,6 +265,7 @@ TEST(BattleObserverTest, BattleSubject) {
     
     // Проверяем удаление наблюдателя
     observer1Called = false;
+    observer2Called = false;
     subject->removeObserver(observer1);
     subject->notifyObservers("Test 2");
     
@@ -255,7 +310,7 @@ TEST(DungeonTest, SaveAndLoad) {
     loadedDungeon.loadFromFile(testFile);
     
     // Проверяем, что загрузилось столько же NPC
-    // (не проверяем точное совпадение, так как нет метода для получения списка)
+    EXPECT_EQ(loadedDungeon.getNPCCount(), 3);
     
     // Убираем за собой
     filesystem::remove(testFile);
@@ -286,6 +341,8 @@ TEST(DungeonTest, RemoveDeadNPCs) {
     dungeon.addNPC(knight);
     dungeon.addNPC(squirrel);
     
+    EXPECT_EQ(dungeon.getNPCCount(), 2);
+    
     // Убиваем белку
     squirrel->die();
     
@@ -293,7 +350,31 @@ TEST(DungeonTest, RemoveDeadNPCs) {
     dungeon.removeDeadNPCs();
     
     // Должен остаться только рыцарь
-    // (не проверяем напрямую, так как нет доступа к списку)
+    EXPECT_EQ(dungeon.getNPCCount(), 1);
+}
+
+TEST(DungeonTest, StartBattle) {
+    Dungeon dungeon;
+    
+    // Добавляем наблюдателей
+    auto consoleObserver = make_shared<ConsoleObserver>();
+    dungeon.addBattleObserver(consoleObserver);
+    
+    // Создаем сценарий битвы
+    dungeon.addNPC("Knight", "Arthur", 0, 0);
+    dungeon.addNPC("Squirrel", "Nutty", 5, 0); // В радиусе
+    dungeon.addNPC("Pegasus", "Sky", 50, 50); // Вне радиуса
+    
+    EXPECT_EQ(dungeon.getNPCCount(), 3);
+    
+    // Запускаем бой
+    dungeon.startBattle(10);
+    
+    // После боя:
+    // - Белка должна быть убита рыцарем
+    // - Пегас должен остаться жив (вне радиуса)
+    // Итого: 2 NPC должны остаться (рыцарь и пегас)
+    EXPECT_EQ(dungeon.getNPCCount(), 2);
 }
 
 // ====================== Интеграционные тесты ======================
@@ -325,6 +406,9 @@ TEST(IntegrationTest, CompleteBattleScenario) {
     // - Chip остается жив (вне радиуса)
     // - Sky остается жив (пегас никого не трогает, и белка уже мертва)
     
+    // После боя должно остаться 3 NPC: рыцарь, пегас и Chip
+    EXPECT_EQ(dungeon.getNPCCount(), 3);
+    
     // Проверяем что файл лога создан
     EXPECT_TRUE(filesystem::exists("integration_test_log.txt"));
     
@@ -348,13 +432,7 @@ TEST(IntegrationTest, FilePersistence) {
     loadedDungeon.loadFromFile(testFile);
     
     // Проверяем, что загрузилось
-    // (косвенно через печать)
-    testing::internal::CaptureStdout();
-    loadedDungeon.printAllNPCs();
-    string output = testing::internal::GetCapturedStdout();
-    
-    EXPECT_TRUE(output.find("Arthur") != string::npos);
-    EXPECT_TRUE(output.find("Nutty") != string::npos);
+    EXPECT_EQ(loadedDungeon.getNPCCount(), 2);
     
     // Убираем за собой
     filesystem::remove(testFile);
@@ -421,7 +499,8 @@ TEST(BattleRulesTest, KnightVsSquirrel) {
     BattleVisitor visitor(10);
     
     visitor.visit(*knight, *squirrel);
-    visitor.visit(*squirrel, *knight); // Обратное посещение
+    // Обратное посещение (белка атакует рыцаря) - ничего не происходит
+    visitor.visit(*squirrel, *knight);
     
     EXPECT_TRUE(knight->isAlive());
     EXPECT_FALSE(squirrel->isAlive());
@@ -435,7 +514,8 @@ TEST(BattleRulesTest, SquirrelVsPegasus) {
     BattleVisitor visitor(10);
     
     visitor.visit(*squirrel, *pegasus);
-    visitor.visit(*pegasus, *squirrel); // Пегас никого не трогает
+    // Пегас никого не трогает
+    visitor.visit(*pegasus, *squirrel);
     
     EXPECT_FALSE(pegasus->isAlive());
     EXPECT_TRUE(squirrel->isAlive());
@@ -471,6 +551,28 @@ TEST(BattleRulesTest, SameTypeNoFight) {
     // Проверяем shouldFight
     EXPECT_FALSE(visitor.shouldFight(*knight1, *knight2));
     EXPECT_FALSE(visitor.shouldFight(*squirrel1, *squirrel2));
+    
+    // Даже если вызвать visit, ничего не должно происходить
+    visitor.visit(*knight1, *knight2);
+    EXPECT_TRUE(knight1->isAlive());
+    EXPECT_TRUE(knight2->isAlive());
+}
+
+TEST(BattleRulesTest, DeadNPCsDontFight) {
+    auto knight = make_shared<Knight>("Arthur", 0, 0);
+    auto squirrel = make_shared<Squirrel>("Nutty", 5, 0);
+    
+    // Убиваем рыцаря
+    knight->die();
+    
+    BattleVisitor visitor(10);
+    
+    // Мертвые не сражаются
+    visitor.visit(*knight, *squirrel);
+    visitor.visit(*squirrel, *knight);
+    
+    // Белка должна остаться жива
+    EXPECT_TRUE(squirrel->isAlive());
 }
 
 // ====================== Главная функция тестов ======================

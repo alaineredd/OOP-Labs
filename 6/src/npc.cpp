@@ -40,8 +40,8 @@ std::string Knight::getType() const {
     return "Knight";
 }
 
-void Knight::accept(NPCVisitor& visitor) {
-    visitor.visit(*this, *this);
+void Knight::accept(NPCVisitor& visitor, NPC& other) {
+    visitor.visit(*this, other);
 }
 
 Squirrel::Squirrel(const std::string& name, int x, int y) 
@@ -51,8 +51,8 @@ std::string Squirrel::getType() const {
     return "Squirrel";
 }
 
-void Squirrel::accept(NPCVisitor& visitor) {
-    visitor.visit(*this, *this);
+void Squirrel::accept(NPCVisitor& visitor, NPC& other) {
+    visitor.visit(*this, other);
 }
 
 Pegasus::Pegasus(const std::string& name, int x, int y) 
@@ -62,6 +62,6 @@ std::string Pegasus::getType() const {
     return "Pegasus";
 }
 
-void Pegasus::accept(NPCVisitor& visitor) {
-    visitor.visit(*this, *this);
+void Pegasus::accept(NPCVisitor& visitor, NPC& other) {
+    visitor.visit(*this, other);
 }

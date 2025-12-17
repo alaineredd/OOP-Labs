@@ -95,8 +95,10 @@ void Dungeon::startBattle(int range) {
                 bool npc1WasAlive = npc1->isAlive();
                 bool npc2WasAlive = npc2->isAlive();
                 
-                npc1->accept(visitor);
-                npc2->accept(visitor); // посещаем 
+                // Вызываем accept с другим NPC в качестве параметра
+                npc1->accept(visitor, *npc2);
+                npc2->accept(visitor, *npc1);
+                
                 if (!npc1->isAlive() && npc1WasAlive) {
                     battleSubject->notifyObservers(
                         npc1->getType() + " '" + npc1->getName() + "' was killed by " +
@@ -116,6 +118,7 @@ void Dungeon::startBattle(int range) {
     removeDeadNPCs();
     battleSubject->notifyObservers("Battle ended. Remaining NPCs: " + std::to_string(npcs.size()));
 }
+
 
 void Dungeon::removeDeadNPCs() {
     npcs.erase(

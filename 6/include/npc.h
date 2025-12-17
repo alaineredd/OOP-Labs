@@ -15,7 +15,7 @@ public:
     virtual ~NPC() = default;
     
     virtual std::string getType() const = 0;
-    virtual void accept(class NPCVisitor& visitor) = 0;
+    virtual void accept(class NPCVisitor& visitor, NPC& other) = 0;
     
     std::string getName() const;
     int getX() const;
@@ -31,19 +31,19 @@ class Knight : public NPC {
 public:
     Knight(const std::string& name, int x, int y);
     std::string getType() const override;
-    void accept(NPCVisitor& visitor) override;
+    void accept(NPCVisitor& visitor, NPC& other) override;
 };
 
 class Squirrel : public NPC {
 public:
     Squirrel(const std::string& name, int x, int y);
     std::string getType() const override;
-    void accept(NPCVisitor& visitor) override;
+    void accept(NPCVisitor& visitor, NPC& other) override;
 };
 
 class Pegasus : public NPC {
 public:
     Pegasus(const std::string& name, int x, int y);
     std::string getType() const override;
-    void accept(NPCVisitor& visitor) override;
+    void accept(NPCVisitor& visitor, NPC& other) override;
 };
